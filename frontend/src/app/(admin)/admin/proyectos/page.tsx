@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { projectsApi } from '@/lib/api'
@@ -13,8 +12,7 @@ import {
   Edit,
   Eye,
   TrendingUp,
-  Users,
-  Clock
+  Users
 } from 'lucide-react'
 
 export default function AdminProjectsPage() {

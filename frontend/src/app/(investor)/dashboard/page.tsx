@@ -50,7 +50,6 @@ export default function DashboardPage() {
 
   const activeInvestments = investmentsList.filter((i) => i.status === 'active').length
   const pendingPayments = investmentsList.filter((i) => i.status === 'pending_payment').length
-  const pendingReservations = reservationsList.filter((r) => r.status === 'pending').length
 
   return (
     <div>

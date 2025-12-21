@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { investmentsApi, paymentsApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, formatPercent } from '@/lib/utils'
-import { Investment, ReturnProjection } from '@/types'
+import { Investment } from '@/types'
 import {
   ArrowLeft,
   TrendingUp,

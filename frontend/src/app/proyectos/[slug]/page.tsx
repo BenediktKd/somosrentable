@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { projectsApi, reservationsApi } from '@/lib/api'
@@ -13,7 +13,6 @@ import {
   ArrowLeft,
   MapPin,
   Calendar,
-  TrendingUp,
   Users,
   Clock,
   CheckCircle,
@@ -24,9 +23,8 @@ import {
 
 export default function ProjectDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const slug = params.slug as string
-  const { user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [calculatorAmount, setCalculatorAmount] = useState('')
@@ -132,7 +130,11 @@ export default function ProjectDetailPage() {
   }
 
   const proj: Project = project
-  const images = proj.images?.length > 0 ? proj.images : proj.main_image ? [{ image: proj.main_image, caption: '' }] : []
+  const images: { image: string; caption: string }[] = proj.images?.length > 0
+    ? proj.images.map(img => ({ image: img.image, caption: img.caption }))
+    : proj.main_image
+      ? [{ image: proj.main_image, caption: '' }]
+      : []
 
   return (
     <div className="min-h-screen bg-background-secondary">
@@ -200,7 +202,7 @@ export default function ProjectDetailPage() {
               <div className="card p-0 overflow-hidden">
                 <div className="relative aspect-video">
                   <img
-                    src={images[currentImageIndex]?.image || images[currentImageIndex]}
+                    src={images[currentImageIndex]?.image}
                     alt={proj.title}
                     className="w-full h-full object-cover"
                   />

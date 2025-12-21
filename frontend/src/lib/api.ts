@@ -41,7 +41,7 @@ api.interceptors.response.use(
           Cookies.set('access_token', access)
           originalRequest.headers.Authorization = `Bearer ${access}`
           return api(originalRequest)
-        } catch (refreshError) {
+        } catch {
           // Refresh failed, logout user
           Cookies.remove('access_token')
           Cookies.remove('refresh_token')
