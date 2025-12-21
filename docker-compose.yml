@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: somosrentable_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-somosrentable}
+      POSTGRES_USER: ${POSTGRES_USER:-somosrentable}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-somosrentable_secret}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-somosrentable}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - somosrentable_network
+
+  # Backend Django
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: somosrentable_backend
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+      - backend_static:/app/staticfiles
+      - backend_media:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=${DEBUG:-True}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-somosrentable}:${POSTGRES_PASSWORD:-somosrentable_secret}@db:5432/${POSTGRES_DB:-somosrentable}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - EMAIL_HOST=mailhog
+      - EMAIL_PORT=1025
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - somosrentable_network
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: somosrentable_frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000/api}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    depends_on:
+      - backend
+    networks:
+      - somosrentable_network
+
+  # Servicio de Webhook (Python independiente)
+  webhook-service:
+    build:
+      context: ./webhook-service
+      dockerfile: Dockerfile
+    container_name: somosrentable_webhook
+    command: python main.py
+    volumes:
+      - ./webhook-service:/app
+    environment:
+      - API_URL=http://backend:8000/api/leads/webhook/
+      - API_KEY=${WEBHOOK_API_KEY:-webhook-secret-key}
+      - INTERVAL_SECONDS=${WEBHOOK_INTERVAL:-30}
+    depends_on:
+      - backend
+    networks:
+      - somosrentable_network
+
+  # Redis (para cache)
+  redis:
+    image: redis:7-alpine
+    container_name: somosrentable_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - somosrentable_network
+
+  # Adminer para gestionar la base de datos
+  adminer:
+    image: adminer:latest
+    container_name: somosrentable_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - somosrentable_network
+
+  # MailHog para testing de emails
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: somosrentable_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - somosrentable_network
+
+volumes:
+  postgres_data:
+  backend_static:
+  backend_media:
+  redis_data:
+
+networks:
+  somosrentable_network:
+    driver: bridge
