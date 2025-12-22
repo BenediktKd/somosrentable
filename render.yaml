@@ -1,0 +1,49 @@
+databases:
+  - name: somosrentable-db
+    databaseName: somosrentable
+    user: somosrentable
+    plan: free
+    region: oregon
+
+services:
+  # Backend Django API
+  - type: web
+    name: somosrentable-api
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: somosrentable-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: WEBHOOK_API_KEY
+        generateValue: true
+
+  # Webhook Service (simula leads externos)
+  - type: worker
+    name: somosrentable-webhook
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: webhook-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: WEBHOOK_URL
+        sync: false
+      - key: WEBHOOK_API_KEY
+        sync: false
+      - key: WEBHOOK_INTERVAL
+        value: 30
