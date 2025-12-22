@@ -4,7 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { PasswordStrength, PasswordMatch } from '@/components/form/PasswordStrength'
 import { useAuth } from '@/lib/auth'
+import { CheckCircle, XCircle } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -19,6 +21,9 @@ export default function RegisterPage() {
   })
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const emailValid = formData.email ? isValidEmail(formData.email) : null
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -107,16 +112,33 @@ export default function RegisterPage() {
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Correo electrónico *
               </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="tu@email.com"
-              />
+              <div className="relative">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 pr-10 rounded-lg border focus:ring-2 focus:ring-primary focus:border-transparent ${
+                    emailValid === null ? 'border-gray-300' :
+                    emailValid ? 'border-green-500' : 'border-red-500'
+                  }`}
+                  placeholder="tu@email.com"
+                />
+                {emailValid !== null && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {emailValid ? (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-red-500" />
+                    )}
+                  </div>
+                )}
+              </div>
+              {emailValid === false && (
+                <p className="text-xs text-red-600 mt-1">Ingresa un email válido</p>
+              )}
             </div>
 
             <div>
@@ -148,6 +170,7 @@ export default function RegisterPage() {
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Mínimo 8 caracteres"
               />
+              <PasswordStrength password={formData.password} />
             </div>
 
             <div>
@@ -161,8 +184,12 @@ export default function RegisterPage() {
                 required
                 value={formData.password_confirm}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  !formData.password_confirm ? 'border-gray-300' :
+                  formData.password === formData.password_confirm ? 'border-green-500' : 'border-red-500'
+                }`}
               />
+              <PasswordMatch password={formData.password} confirmPassword={formData.password_confirm} />
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>

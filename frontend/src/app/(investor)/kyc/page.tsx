@@ -178,17 +178,43 @@ export default function KYCPage() {
             </div>
           )}
 
-          {/* Info box */}
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="flex items-start gap-3">
-              <FileCheck className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-700">
-                <p className="font-medium mb-1">Requisitos:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>Foto clara de tu cédula de identidad o pasaporte</li>
-                  <li>El documento debe estar vigente y ser legible</li>
-                  <li>El nombre debe coincidir con tu perfil</li>
-                </ul>
+          {/* Visual Guide */}
+          <div className="bg-gradient-to-r from-blue-50 to-primary-50 p-6 rounded-xl border border-blue-100">
+            <h3 className="font-semibold text-secondary mb-4 flex items-center gap-2">
+              <Camera className="w-5 h-5 text-primary" />
+              Cómo tomar una buena foto
+            </h3>
+
+            <div className="grid sm:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-4 rounded-lg text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-sm font-medium text-gray-700">Buena iluminación</p>
+                <p className="text-xs text-gray-500 mt-1">Sin sombras ni reflejos</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-sm font-medium text-gray-700">Documento completo</p>
+                <p className="text-xs text-gray-500 mt-1">Todos los bordes visibles</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-sm font-medium text-gray-700">Imagen nítida</p>
+                <p className="text-xs text-gray-500 mt-1">Texto legible claramente</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 text-sm text-gray-600 bg-white/50 p-3 rounded-lg">
+              <FileCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-gray-700">Documentos aceptados:</p>
+                <p>Cédula de identidad o Pasaporte vigente</p>
+                <p className="text-xs text-gray-500 mt-1">Formatos: JPG, PNG • Máximo: 5MB</p>
               </div>
             </div>
           </div>

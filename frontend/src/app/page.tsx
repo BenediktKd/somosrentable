@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { MobileMenu } from '@/components/layout/MobileMenu'
 import { useQuery } from '@tanstack/react-query'
 import { projectsApi } from '@/lib/api'
 import { formatCurrency, formatPercent } from '@/lib/utils'
@@ -14,6 +15,12 @@ import {
   ChevronDown,
   ArrowRight
 } from 'lucide-react'
+
+const navLinks = [
+  { href: '/proyectos', label: 'Proyectos' },
+  { href: '#como-funciona', label: '¿Cómo funciona?' },
+  { href: '#faq', label: 'FAQ' },
+]
 
 export default function HomePage() {
   const { data: projects } = useQuery({
@@ -30,17 +37,13 @@ export default function HomePage() {
             SomosRentable
           </Link>
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/proyectos" className="text-gray-600 hover:text-primary">
-              Proyectos
-            </Link>
-            <Link href="#como-funciona" className="text-gray-600 hover:text-primary">
-              ¿Cómo funciona?
-            </Link>
-            <Link href="#faq" className="text-gray-600 hover:text-primary">
-              FAQ
-            </Link>
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="text-gray-600 hover:text-primary">
+                {link.label}
+              </Link>
+            ))}
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <Link href="/login">
               <Button variant="ghost">Iniciar Sesión</Button>
             </Link>
@@ -48,6 +51,7 @@ export default function HomePage() {
               <Button>Registrarse</Button>
             </Link>
           </div>
+          <MobileMenu links={navLinks} />
         </div>
       </header>
 

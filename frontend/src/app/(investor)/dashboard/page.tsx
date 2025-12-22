@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth'
 import { investmentsApi, reservationsApi, kycApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
+import { StatCardSkeleton, InvestmentRowSkeleton } from '@/components/ui/skeleton'
 import { formatCurrency, formatPercent } from '@/lib/utils'
 import { Investment, Reservation, KYCStatus } from '@/types'
 import {
@@ -20,12 +21,12 @@ import {
 export default function DashboardPage() {
   const { user } = useAuth()
 
-  const { data: investments } = useQuery({
+  const { data: investments, isLoading: investmentsLoading } = useQuery({
     queryKey: ['investments'],
     queryFn: () => investmentsApi.getAll(),
   })
 
-  const { data: reservations } = useQuery({
+  const { data: reservations, isLoading: reservationsLoading } = useQuery({
     queryKey: ['reservations'],
     queryFn: () => reservationsApi.getMine(),
   })
@@ -34,6 +35,8 @@ export default function DashboardPage() {
     queryKey: ['kyc-status'],
     queryFn: () => kycApi.getStatus(),
   })
+
+  const isLoading = investmentsLoading || reservationsLoading
 
   const investmentsList: Investment[] = investments?.results || []
   const reservationsList: Reservation[] = reservations?.results || []
@@ -127,53 +130,64 @@ export default function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="card">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-primary" />
+        {isLoading ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          <>
+            <div className="card">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-sm text-gray-500">Total Invertido</span>
+              </div>
+              <p className="text-2xl font-bold text-secondary">
+                {formatCurrency(totalInvested)}
+              </p>
             </div>
-            <span className="text-sm text-gray-500">Total Invertido</span>
-          </div>
-          <p className="text-2xl font-bold text-secondary">
-            {formatCurrency(totalInvested)}
-          </p>
-        </div>
 
-        <div className="card">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-green-600" />
+            <div className="card">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                </div>
+                <span className="text-sm text-gray-500">Rentabilidad Esperada</span>
+              </div>
+              <p className="text-2xl font-bold text-green-600">
+                +{formatCurrency(expectedReturns)}
+              </p>
             </div>
-            <span className="text-sm text-gray-500">Rentabilidad Esperada</span>
-          </div>
-          <p className="text-2xl font-bold text-green-600">
-            +{formatCurrency(expectedReturns)}
-          </p>
-        </div>
 
-        <div className="card">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-blue-600" />
+            <div className="card">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-blue-600" />
+                </div>
+                <span className="text-sm text-gray-500">Inversiones Activas</span>
+              </div>
+              <p className="text-2xl font-bold text-secondary">
+                {activeInvestments}
+              </p>
             </div>
-            <span className="text-sm text-gray-500">Inversiones Activas</span>
-          </div>
-          <p className="text-2xl font-bold text-secondary">
-            {activeInvestments}
-          </p>
-        </div>
 
-        <div className="card">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-yellow-600" />
+            <div className="card">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-yellow-600" />
+                </div>
+                <span className="text-sm text-gray-500">Pendientes de Pago</span>
+              </div>
+              <p className="text-2xl font-bold text-secondary">
+                {pendingPayments}
+              </p>
             </div>
-            <span className="text-sm text-gray-500">Pendientes de Pago</span>
-          </div>
-          <p className="text-2xl font-bold text-secondary">
-            {pendingPayments}
-          </p>
-        </div>
+          </>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
