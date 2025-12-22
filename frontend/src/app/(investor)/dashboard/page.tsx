@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth'
 import { investmentsApi, reservationsApi, kycApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
-import { StatCardSkeleton, InvestmentRowSkeleton } from '@/components/ui/skeleton'
+import { StatCardSkeleton } from '@/components/ui/skeleton'
 import { formatCurrency, formatPercent } from '@/lib/utils'
 import { Investment, Reservation, KYCStatus } from '@/types'
 import {
