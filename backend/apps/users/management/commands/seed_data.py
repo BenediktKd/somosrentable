@@ -126,6 +126,7 @@ El proyecto se encuentra en etapa de construcción con entrega estimada para 202
                 'duration_months': 12,
                 'status': Project.Status.FUNDING,
                 'is_featured': True,
+                'main_image_url': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800',
             },
             {
                 'title': 'Condominio Vista Mar - Viña del Mar',
@@ -152,6 +153,7 @@ Características:
                 'duration_months': 12,
                 'status': Project.Status.FUNDING,
                 'is_featured': True,
+                'main_image_url': 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
             },
             {
                 'title': 'Centro Comercial Plaza Norte - Huechuraba',
@@ -178,6 +180,7 @@ El proyecto contempla:
                 'duration_months': 12,
                 'status': Project.Status.FUNDING,
                 'is_featured': False,
+                'main_image_url': 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800',
             },
             {
                 'title': 'Bodega Industrial - Pudahuel',
@@ -204,6 +207,7 @@ Especificaciones:
                 'duration_months': 12,
                 'status': Project.Status.FUNDED,
                 'is_featured': False,
+                'main_image_url': 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800',
             },
         ]
 
@@ -221,7 +225,13 @@ Especificaciones:
             if created:
                 self.stdout.write(f'  Proyecto creado: {data["title"]}')
             else:
-                self.stdout.write(f'  Proyecto ya existe: {data["title"]}')
+                # Actualizar imagen si no tiene
+                if not project.main_image_url and data.get('main_image_url'):
+                    project.main_image_url = data['main_image_url']
+                    project.save()
+                    self.stdout.write(f'  Proyecto actualizado con imagen: {data["title"]}')
+                else:
+                    self.stdout.write(f'  Proyecto ya existe: {data["title"]}')
             projects.append(project)
 
         return projects
