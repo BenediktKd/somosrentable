@@ -4,22 +4,46 @@ Plataforma de crowdfunding inmobiliario desarrollada con Django, Next.js y Postg
 
 ---
 
+## Demo en Produccion
+
+La plataforma esta desplegada y disponible para pruebas:
+
+| Servicio | URL |
+|----------|-----|
+| Frontend | https://somosrentable.vercel.app |
+| Backend API | https://somosrentable.onrender.com/api |
+| Documentacion API | https://somosrentable.onrender.com/api/docs/ |
+
+### Credenciales de Prueba
+
+| Email | Password | Rol |
+|-------|----------|-----|
+| admin@somosrentable.com | admin123 | Administrador |
+| ejecutivo1@somosrentable.com | ejecutivo123 | Ejecutivo |
+| ejecutivo2@somosrentable.com | ejecutivo123 | Ejecutivo |
+| ejecutivo3@somosrentable.com | ejecutivo123 | Ejecutivo |
+
+> **Nota**: El backend en Render (free tier) puede tardar ~30 segundos en despertar si ha estado inactivo.
+
+---
+
 ## Tabla de Contenidos
 
-1. [Resumen Ejecutivo](#resumen-ejecutivo)
-2. [Arquitectura del Sistema](#arquitectura-del-sistema)
-3. [Stack Tecnologico](#stack-tecnologico)
-4. [Mapeo de Requerimientos](#mapeo-de-requerimientos)
-5. [Modelo de Datos](#modelo-de-datos)
-6. [API REST](#api-rest)
-7. [Autenticacion y Autorizacion](#autenticacion-y-autorizacion)
-8. [Logica de Negocio](#logica-de-negocio)
-9. [Frontend](#frontend)
-10. [Webhook Service](#webhook-service)
-11. [Instalacion y Ejecucion](#instalacion-y-ejecucion)
-12. [Guia de Demostracion](#guia-de-demostracion)
-13. [Decisiones de Diseno](#decisiones-de-diseno)
-14. [Seguridad](#seguridad)
+1. [Demo en Produccion](#demo-en-produccion)
+2. [Resumen Ejecutivo](#resumen-ejecutivo)
+3. [Arquitectura del Sistema](#arquitectura-del-sistema)
+4. [Stack Tecnologico](#stack-tecnologico)
+5. [Mapeo de Requerimientos](#mapeo-de-requerimientos)
+6. [Modelo de Datos](#modelo-de-datos)
+7. [API REST](#api-rest)
+8. [Autenticacion y Autorizacion](#autenticacion-y-autorizacion)
+9. [Logica de Negocio](#logica-de-negocio)
+10. [Frontend](#frontend)
+11. [Webhook Service](#webhook-service)
+12. [Instalacion y Ejecucion](#instalacion-y-ejecucion)
+13. [Guia de Demostracion](#guia-de-demostracion)
+14. [Decisiones de Diseno](#decisiones-de-diseno)
+15. [Seguridad](#seguridad)
 
 ---
 
