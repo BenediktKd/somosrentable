@@ -39,7 +39,17 @@ export default function AdminDashboardPage() {
     queryFn: () => leadsApi.getAll({ status: 'new' }),
   })
 
-  const statistics: PlatformStatistics = stats || {
+  // Map nested API response to flat structure
+  const statistics: PlatformStatistics = stats ? {
+    total_invested: stats.investments?.total_amount || 0,
+    total_investors: stats.users?.total_investors || 0,
+    total_projects: stats.projects?.total || 0,
+    active_investments: stats.investments?.total_count || 0,
+    pending_kyc: stats.users?.pending_kyc || 0,
+    pending_payments: stats.payments?.pending || 0,
+    total_leads: stats.leads?.total || 0,
+    leads_this_month: stats.leads?.new_30d || 0,
+  } : {
     total_invested: 0,
     total_investors: 0,
     total_projects: 0,
