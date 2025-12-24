@@ -1,0 +1,1 @@
+# Tests for SomosRentable API

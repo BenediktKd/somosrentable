@@ -19,17 +19,16 @@ docker compose logs -f webhook-service  # View webhook logs
 
 ### Backend (Django)
 ```bash
-# Inside container or with venv activated
-cd backend
-python manage.py migrate
-python manage.py seed_data              # Create test users and projects
-python manage.py createsuperuser
-python manage.py runserver 0.0.0.0:8000
+# Inside container
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py seed_data
+docker compose exec backend python manage.py createsuperuser
 
-# Testing
-pytest                                   # Run all tests
-pytest apps/users/tests.py              # Run specific test file
-pytest -k "test_login"                  # Run tests matching pattern
+# Testing (run in container)
+docker compose run --rm backend pytest tests/              # All tests
+docker compose run --rm backend pytest tests/test_auth.py  # Auth tests only
+docker compose run --rm backend pytest -k "test_login"     # Pattern match
+docker compose run --rm backend pytest -v --tb=short       # Verbose with short traceback
 ```
 
 ### Frontend (Next.js)
