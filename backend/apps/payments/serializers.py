@@ -10,12 +10,15 @@ class PaymentProofSerializer(serializers.ModelSerializer):
 
     investor_email = serializers.EmailField(source='investment.user.email', read_only=True)
     project_title = serializers.CharField(source='investment.project.title', read_only=True)
+    investment_amount = serializers.DecimalField(
+        source='investment.amount', max_digits=12, decimal_places=2, read_only=True
+    )
     status_display = serializers.CharField(source='get_status_display', read_only=True)
 
     class Meta:
         model = PaymentProof
         fields = [
-            'id', 'investment', 'investor_email', 'project_title',
+            'id', 'investment', 'investor_email', 'project_title', 'investment_amount',
             'proof_image', 'amount', 'bank_name', 'transaction_reference',
             'transaction_date', 'status', 'status_display', 'rejection_reason',
             'reviewed_at', 'created_at'

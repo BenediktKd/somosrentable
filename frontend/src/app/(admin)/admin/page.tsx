@@ -236,10 +236,10 @@ export default function AdminDashboardPage() {
                 >
                   <div>
                     <p className="font-medium text-secondary">
-                      {payment.investment_details.project_title}
+                      {payment.project_title}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {payment.investment_details.user_email}
+                      {payment.investor_email}
                     </p>
                   </div>
                   <div className="text-right">

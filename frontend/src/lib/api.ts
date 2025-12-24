@@ -218,12 +218,12 @@ export const leadsApi = {
 // Admin KYC API
 export const adminKycApi = {
   getPending: async () => {
-    const response = await api.get('/kyc/pending/')
+    const response = await api.get('/kyc/submissions/')
     return response.data
   },
 
   review: async (id: string, data: { action: 'approve' | 'reject'; rejection_reason?: string }) => {
-    const response = await api.post(`/kyc/${id}/review/`, data)
+    const response = await api.post(`/kyc/submissions/${id}/review/`, data)
     return response.data
   },
 }

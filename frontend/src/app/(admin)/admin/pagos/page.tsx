@@ -94,10 +94,10 @@ export default function AdminPaymentsPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-secondary">
-                        {payment.investment_details.project_title}
+                        {payment.project_title}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {payment.investment_details.user_email}
+                        {payment.investor_email}
                       </p>
                     </div>
                   </div>
@@ -112,7 +112,7 @@ export default function AdminPaymentsPage() {
                     <div>
                       <p className="text-sm text-gray-500">Monto Inversión</p>
                       <p className="font-semibold text-secondary">
-                        {formatCurrency(parseFloat(payment.investment_details.amount))}
+                        {formatCurrency(parseFloat(payment.investment_amount))}
                       </p>
                     </div>
                     <div>
@@ -171,11 +171,11 @@ export default function AdminPaymentsPage() {
               </div>
 
               {/* Amount mismatch warning */}
-              {parseFloat(payment.amount) !== parseFloat(payment.investment_details.amount) && (
+              {parseFloat(payment.amount) !== parseFloat(payment.investment_amount) && (
                 <div className="mt-4 p-3 rounded-lg bg-yellow-50 border border-yellow-200">
                   <p className="text-sm text-yellow-700">
                     <strong>Atención:</strong> El monto declarado ({formatCurrency(parseFloat(payment.amount))})
-                    no coincide con el monto de la inversión ({formatCurrency(parseFloat(payment.investment_details.amount))}).
+                    no coincide con el monto de la inversión ({formatCurrency(parseFloat(payment.investment_amount))}).
                   </p>
                 </div>
               )}
@@ -203,9 +203,9 @@ export default function AdminPaymentsPage() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="text-lg font-semibold text-secondary">
-                    {selectedPayment.investment_details.project_title}
+                    {selectedPayment.project_title}
                   </p>
-                  <p className="text-gray-500">{selectedPayment.investment_details.user_email}</p>
+                  <p className="text-gray-500">{selectedPayment.investor_email}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-primary">
@@ -245,7 +245,7 @@ export default function AdminPaymentsPage() {
               Rechazar Comprobante
             </h3>
             <p className="text-gray-600 mb-4">
-              ¿Por qué rechazas el comprobante de <strong>{selectedPayment.investment_details.user_email}</strong>?
+              ¿Por qué rechazas el comprobante de <strong>{selectedPayment.investor_email}</strong>?
             </p>
             <textarea
               value={rejectionReason}

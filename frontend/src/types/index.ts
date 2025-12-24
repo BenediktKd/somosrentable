@@ -124,20 +124,19 @@ export interface Lead {
 export interface PaymentProof {
   id: string
   investment: string
-  investment_details: {
-    id: string
-    project_title: string
-    amount: string
-    user_email: string
-  }
+  investor_email: string
+  project_title: string
+  investment_amount: string
   proof_image: string
   amount: string
+  bank_name: string
+  transaction_reference: string
+  transaction_date: string
   status: 'pending' | 'approved' | 'rejected'
   status_display: string
   rejection_reason: string
   created_at: string
   reviewed_at: string | null
-  reviewed_by: string | null
 }
 
 export interface KYCSubmission {
