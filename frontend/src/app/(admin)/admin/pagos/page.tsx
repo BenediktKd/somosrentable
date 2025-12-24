@@ -128,11 +128,22 @@ export default function AdminPaymentsPage() {
                 {/* Proof Image */}
                 <div className="lg:w-48 flex-shrink-0">
                   <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                      src={payment.proof_image}
-                      alt="Comprobante"
-                      className="w-full h-full object-contain"
-                    />
+                    {payment.proof_image ? (
+                      <img
+                        src={payment.proof_image}
+                        alt="Comprobante"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                          target.nextElementSibling?.classList.remove('hidden')
+                        }}
+                      />
+                    ) : null}
+                    <div className={`absolute inset-0 flex flex-col items-center justify-center text-gray-400 ${payment.proof_image ? 'hidden' : ''}`}>
+                      <CreditCard className="w-8 h-8 mb-1" />
+                      <span className="text-xs">Sin imagen</span>
+                    </div>
                     <button
                       onClick={() => setSelectedPayment(payment)}
                       className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center group"
@@ -194,11 +205,23 @@ export default function AdminPaymentsPage() {
             >
               <X className="w-8 h-8" />
             </button>
-            <img
-              src={selectedPayment.proof_image}
-              alt="Comprobante"
-              className="w-full h-auto rounded-lg"
-            />
+            {selectedPayment.proof_image ? (
+              <img
+                src={selectedPayment.proof_image}
+                alt="Comprobante"
+                className="w-full h-auto rounded-lg"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                }}
+              />
+            ) : (
+              <div className="w-full h-64 bg-gray-100 rounded-lg flex flex-col items-center justify-center text-gray-400">
+                <CreditCard className="w-16 h-16 mb-2" />
+                <span>Imagen no disponible</span>
+                <span className="text-sm mt-1">(El archivo fue eliminado del servidor)</span>
+              </div>
+            )}
             <div className="mt-4 bg-white rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div>

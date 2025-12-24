@@ -26,7 +26,17 @@ export default function AdminStatisticsPage() {
     queryFn: () => statisticsApi.getExecutives(),
   })
 
-  const stats: PlatformStatistics = platformStats || {
+  // Map nested API response to flat structure
+  const stats: PlatformStatistics = platformStats ? {
+    total_invested: platformStats.investments?.total_amount || 0,
+    total_investors: platformStats.users?.total_investors || 0,
+    total_projects: platformStats.projects?.total || 0,
+    active_investments: platformStats.investments?.total_count || 0,
+    pending_kyc: platformStats.users?.pending_kyc || 0,
+    pending_payments: platformStats.payments?.pending || 0,
+    total_leads: platformStats.leads?.total || 0,
+    leads_this_month: platformStats.leads?.new_30d || 0,
+  } : {
     total_invested: 0,
     total_investors: 0,
     total_projects: 0,
@@ -37,7 +47,17 @@ export default function AdminStatisticsPage() {
     leads_this_month: 0,
   }
 
-  const executives: ExecutiveStatistics[] = executiveStats?.results || []
+  // Map executives from array (API returns array directly, not { results: [] })
+  const rawExecutives = Array.isArray(executiveStats) ? executiveStats : (executiveStats?.results || [])
+  const executives: ExecutiveStatistics[] = rawExecutives.map((exec: Record<string, unknown>) => ({
+    id: exec.executive_id as string,
+    name: exec.executive_name as string,
+    email: exec.executive_email as string,
+    total_leads: (exec.leads as Record<string, number>)?.total || 0,
+    new_leads: (exec.leads as Record<string, number>)?.new || 0,
+    converted_leads: (exec.leads as Record<string, number>)?.converted || 0,
+    conversion_rate: (exec.leads as Record<string, number>)?.conversion_rate || 0,
+  }))
 
   const isLoading = loadingPlatform || loadingExecutives
 
